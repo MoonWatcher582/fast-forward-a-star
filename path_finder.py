@@ -26,6 +26,7 @@ class PathFinder:
     def __init__(self, maze_file):
         self.close = dict()
         self.open = MinHeap()
+        self.open_dict = dict()
         self.grid = []
         self.start_state = None
         self.goal_state = None
@@ -52,7 +53,6 @@ class PathFinder:
 
 
     def find_path_internal(self, start, goal, path):
-        print start
         path.append(start)
         if start == goal:
             return path
@@ -64,6 +64,7 @@ class PathFinder:
                     continue
                 n.distance = self.calculate_manhattan_distance(n, goal)
                 self.open.insert(n)
+                self.open_dict[n] = True
         nextC = self.open.extract()
         if not nextC:
             return []
@@ -82,37 +83,37 @@ class PathFinder:
 
             if start.y - 1 >= 0:
                 n = Coord(start.x - 1, start.y - 1)
-                if not self.close.has_key(n):
+                if not self.close.has_key(n) and not self.open_dict.has_key(n):
                     neighbors.append(n)
 
             if start.y + 1 < max_size:
                 n = Coord(start.x - 1, start.y + 1)
-                if not self.close.has_key(n):
+                if not self.close.has_key(n) and not self.open_dict.has_key(n):
                     neighbors.append(n)
 
         if start.y - 1 >= 0:
             n = Coord(start.x, start.y - 1)
-            if not self.close.has_key(n):
+            if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
 
         if start.y + 1 < max_size:
             n = Coord(start.x, start.y + 1)
-            if not self.close.has_key(n):
+            if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
 
         if start.x + 1 < max_size:
             n = Coord(start.x + 1, start.y)
-            if not self.close.has_key(n):
+            if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
 
             if start.y - 1 >= 0:
                 n = Coord(start.x + 1, start.y - 1)
-                if not self.close.has_key(n):
+                if not self.close.has_key(n) and not self.open_dict.has_key(n):
                     neighbors.append(n)
 
             if start.y + 1 < max_size:
                 n = Coord(start.x + 1, start.y + 1)
-                if not self.close.has_key(n):
+                if not self.close.has_key(n) and not self.open_dict.has_key(n):
                     neighbors.append(n)
 
         return neighbors
@@ -124,6 +125,7 @@ def line_to_coord(line):
 	return Coord(val[0], val[1])
 
 def main():
+    sys.setrecursionlimit(10300)
     pf = PathFinder(sys.argv[1])
     path = pf.find_path()
     print path
