@@ -43,19 +43,19 @@ class MinHeap(object):
 					return
 			else:
 				return
-		else:
-			if r_index < self.size and l_index < self.size:
-				if self.heap_data[r_index] < self.heap_data[l_index]:
-					smaller = r_index
-				else:
-					smaller = l_index
-			elif r_index < self.size and l_index >= self.size:
+		smaller = None
+		if r_index < self.size and l_index < self.size:
+			if self.heap_data[r_index] < self.heap_data[l_index]:
 				smaller = r_index
-			elif r_index >= self.size and l_index < self.size:
-				smaller = l_index
 			else:
-				return
-			self.swap(index, smaller)
+				smaller = l_index
+		elif r_index < self.size and l_index >= self.size:
+			smaller = r_index
+		elif r_index >= self.size and l_index < self.size:
+			smaller = l_index
+		else:
+			return
+		self.swap(index, smaller)
 		self.sift_down(smaller)
 
 	def heapsort(self):
