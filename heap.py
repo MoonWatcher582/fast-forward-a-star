@@ -23,7 +23,6 @@ class MinHeap(object):
 	def sift_up(self, index):
 		while index != 0:
 			p = self.parent(index)
-			p = int(p)
 			if self.heap_data[index] < self.heap_data[p]:
 				self.swap(index, p)
 				index = p
@@ -70,10 +69,10 @@ class MinHeap(object):
 		self.heap_data[ind2] = temp
 
 	def parent(self, index):
-		return math.floor((index - 1) / 2)
+		return int(math.floor((index - 1) / 2))
 
 	def left_child(self, index):
-		return ((index * 2) + 1)
+		return int((index * 2) + 1)
 
 	def right_child(self, index):
-		return ((index * 2) + 2)
+		return int((index * 2) + 2)
