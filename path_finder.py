@@ -1,4 +1,5 @@
 from heap import MinHeap
+import sys
 
 max_size = 101
 
@@ -6,9 +7,9 @@ class Coord:
     def __init__(self, x, y):
         self.x=x
         self.y=y
-	
-	def __str__(self):
-		return str(self.x) + ", " + str(self.y)
+
+    def __str__(self):
+        return str(self.x) + ", " + str(self.y)
 
     def __lt__(self, other):
         return self.distance < other.distance
@@ -17,6 +18,9 @@ class Coord:
         if self.x == other.x and self.y == other.y:
             return True
         return False
+
+    def __hash__(self):
+        return hash((self.x, self.y))
 
 class PathFinder:
     def __init__(self, maze_file):
@@ -43,66 +47,75 @@ class PathFinder:
                     self.grid[line_row].append(True if pos == '1' else False)
                 line_row += 1
 
+    def find_path(self):
+        return self.find_path_internal(self.start_state, self.goal_state, [])
 
-    def find_path(self, start, goal, path):
-        path += start
+
+    def find_path_internal(self, start, goal, path):
+        print start
+        path.append(start)
         if start == goal:
             return path
         self.close[start] = True
-        neighbors = self.ComputerValidNeighbors(start)
-        for n in neighbors:
-            if self.maze[n.x][n.y]:
-                continue
-            n.distance = self.calculate_manhattan_distance(n, goal)
-            self.open.insert(n)
+        neighbors = self.compute_valid_neighbors(start)
+        if neighbors:
+            for n in neighbors:
+                if self.grid[n.x][n.y]:
+                    continue
+                n.distance = self.calculate_manhattan_distance(n, goal)
+                self.open.insert(n)
         nextC = self.open.extract()
-        return self.FindPath(nextC, goal, path)
+        if not nextC:
+            return []
+        return self.find_path_internal(nextC, goal, path)
 
     def calculate_manhattan_distance(self, start, end):
         return abs(start.x - end.x) + abs(start.y - end.y)
 
     def compute_valid_neighbors(self, start):
-        neighbors = {}
+        neighbors = []
         # Find all neighbors.
         if start.x - 1 >= 0:
             n = Coord(start.x - 1, start.y)
-            if not self.close[n]:
-                neighbors += n
+            if not self.close.has_key(n):
+                neighbors.append(n)
 
             if start.y - 1 >= 0:
                 n = Coord(start.x - 1, start.y - 1)
-                if not self.close[n]:
-                    neighbors += n
+                if not self.close.has_key(n):
+                    neighbors.append(n)
 
             if start.y + 1 < max_size:
                 n = Coord(start.x - 1, start.y + 1)
-                if not self.close[n]:
-                    neighbors += n
+                if not self.close.has_key(n):
+                    neighbors.append(n)
 
         if start.y - 1 >= 0:
             n = Coord(start.x, start.y - 1)
-            if not self.close[n]:
-                neighbors += n
+            if not self.close.has_key(n):
+                neighbors.append(n)
 
         if start.y + 1 < max_size:
             n = Coord(start.x, start.y + 1)
-            if not self.close[n]:
-                neighbors += n
+            if not self.close.has_key(n):
+                neighbors.append(n)
 
         if start.x + 1 < max_size:
             n = Coord(start.x + 1, start.y)
-            if not self.close[n]:
-                neighbors += n
+            if not self.close.has_key(n):
+                neighbors.append(n)
 
             if start.y - 1 >= 0:
                 n = Coord(start.x + 1, start.y - 1)
-                if not self.close[n]:
-                    neighbors += n
+                if not self.close.has_key(n):
+                    neighbors.append(n)
 
             if start.y + 1 < max_size:
                 n = Coord(start.x + 1, start.y + 1)
-                if not self.close[n]:
-                    neighbors += n
+                if not self.close.has_key(n):
+                    neighbors.append(n)
+
+        return neighbors
 
 def line_to_coord(line):
 	val = [int(x) for x in line.split(",")]
@@ -110,3 +123,10 @@ def line_to_coord(line):
 		raise ValueError
 	return Coord(val[0], val[1])
 
+def main():
+    pf = PathFinder(sys.argv[1])
+    path = pf.find_path()
+    print path
+
+if __name__ == '__main__':
+    main()

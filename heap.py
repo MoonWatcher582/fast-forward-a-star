@@ -11,6 +11,8 @@ class MinHeap(object):
 		self.sift_up(len(self.heap_data) - 1)
 
 	def extract(self):
+                if self.size == 0:
+                    return None
 		temp = self.heap_data[0]
 		self.heap_data[0] = self.heap_data[len(self.heap_data) - 1]
 		del(self.heap_data[-1])
