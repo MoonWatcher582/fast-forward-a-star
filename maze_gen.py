@@ -19,6 +19,9 @@ class Grid(object):
 			for j in range(101):
 				self.grid[i].append(Node(j, i))
 	
+	def getNode(x, y):
+		return self.grid[y][x]
+
 	def generate_maze(self):
 		if not self.grid:
 			raise Exception("No grid found")
@@ -26,7 +29,7 @@ class Grid(object):
 		self.start_x = random.randint(0, 100)
 		self.start_y = random.randint(0, 100)
 
-		self.grid = dfs(self, self.grid[self.start_y][self.start_x])
+		self.grid = dfs(self, self.getNode(self.start_x, self.start_y))
 		return self 
 	
 	def find_unexpanded_node(self):
@@ -35,8 +38,8 @@ class Grid(object):
 
 		for x in range(101):
 			for y in range(101):
-				if self.grid[y][x].visited == False:
-					return self.grid[y][x]
+				if self.getNode(x, y).visited == False:
+					return self.getNode(x, y)
 
 		return None 
 
@@ -48,7 +51,7 @@ class Grid(object):
 			for y_ in range(max(0, y-1), min(100, y+1)):
 				if (x, y) == (x_, y_):
 					continue
-				yield self.grid[y_][x_]
+				yield self.getNode(x_, y_)
 
 def dfs(grid, start):
 	visited_set = set()
@@ -70,7 +73,7 @@ def dfs(grid, start):
 			break
 		stack.append(n)
 
-	grid.grid[grid.start_y][grid.start_x].blocked = False
+	grid.getNode(grid.start_x, grid.start_y).blocked = False
 	return grid.grid
 
 def main():
@@ -90,7 +93,7 @@ def main():
 			for x in range(101):
 				for y in range(101):
 					coordValue = '0'
-					if maze.grid[y][x].blocked:
+					if maze.getNode(x, y).blocked:
 						coordValue = '1'
 					f.write(coordValue)
 				if x != 100:
