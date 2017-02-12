@@ -1,16 +1,16 @@
 from heap import MinHeap
 import sys
 
-max_size = 101
+max_size = 3
 
 class Coord:
     def __init__(self, x, y):
         self.x=x
         self.y=y
-		  self.__repr__ = self.__str__
+	self.__repr__ = self.__str__
 
     def __str__(self):
-        return "(" + str(self.x) + ", " + str(self.y) + ")"
+        return "{" + str(self.x) + ", " + str(self.y) + "}"
 
     def __lt__(self, other):
         return self.distance < other.distance
@@ -82,16 +82,6 @@ class PathFinder:
             if not self.close.has_key(n):
                 neighbors.append(n)
 
-            if start.y - 1 >= 0:
-                n = Coord(start.x - 1, start.y - 1)
-                if not self.close.has_key(n) and not self.open_dict.has_key(n):
-                    neighbors.append(n)
-
-            if start.y + 1 < max_size:
-                n = Coord(start.x - 1, start.y + 1)
-                if not self.close.has_key(n) and not self.open_dict.has_key(n):
-                    neighbors.append(n)
-
         if start.y - 1 >= 0:
             n = Coord(start.x, start.y - 1)
             if not self.close.has_key(n) and not self.open_dict.has_key(n):
@@ -106,16 +96,6 @@ class PathFinder:
             n = Coord(start.x + 1, start.y)
             if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
-
-            if start.y - 1 >= 0:
-                n = Coord(start.x + 1, start.y - 1)
-                if not self.close.has_key(n) and not self.open_dict.has_key(n):
-                    neighbors.append(n)
-
-            if start.y + 1 < max_size:
-                n = Coord(start.x + 1, start.y + 1)
-                if not self.close.has_key(n) and not self.open_dict.has_key(n):
-                    neighbors.append(n)
 
         return neighbors
 
