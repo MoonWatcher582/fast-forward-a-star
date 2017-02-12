@@ -2,12 +2,15 @@ class Coord:
     def __init__(self, x, y):
         self.x=x
         self.y=y
+	
+	def __str__(self):
+		return str(self.x) + ", " + str(self.y)
 
 class PathFinder:
     def __init__(self, maze_file):
         self.grid = []
         self.start_state = None
-        self.end_state = None
+        self.goal_state = None
         for i in range(101):
             self.grid.append([])
         with open(maze_file, 'r') as f:
@@ -19,8 +22,8 @@ class PathFinder:
                 if not self.start_state:
                     self.start_state = line_to_coord(line)
                     continue
-                if not self.end_state:
-                    self.end_state = line_to_coord(line)
+                if not self.goal_state:
+                    self.goal_state = line_to_coord(line)
                     continue
                 for pos in line:
                     self.grid[line_row].append(True if pos == '1' else False)
