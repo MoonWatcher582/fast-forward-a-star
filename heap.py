@@ -21,6 +21,7 @@ class MinHeap(object):
 			self.sift_down(0)
 		else:
 			temp = last_elem
+			self.size -= 1
 		return temp
 
 	def sift_up(self, index):
