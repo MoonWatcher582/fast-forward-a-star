@@ -40,6 +40,15 @@ class MinHeap(object):
 		l_index = self.left_child(index)
 		l_child = self.safe_get_value(l_index)
 
+		currVal = self.safe_get_value(index)
+
+		if r_child and l_child and currVal < r_child and currVal < l_child:
+			return
+		elif r_child and currVal < r_child:
+			return
+		elif l_child and currVal < l_child:
+			return
+
 		smaller = None
 		if r_child and l_child:
 			smaller = r_index if r_child < l_child else l_index

@@ -44,7 +44,6 @@ def several_elements_test():
 	elems = []
 	for i in range(8):
 		elems.append(h.extract())
-	print elems
 	assert elems == [2, 3, 4, 5, 8, 18, 100, 122]
 	assert_size(h, 0)
 
