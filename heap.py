@@ -16,7 +16,7 @@ class MinHeap(object):
 		last_elem = self.heap_data.pop()
 		if self.heap_data:
 			temp = self.heap_data[0]
-			heap[0] = last_elem
+			self.heap_data[0] = last_elem
 			self.size -= 1
 			self.sift_down(0)
 		else:
