@@ -8,16 +8,19 @@ class MinHeap(object):
 	def insert(self, data):
 		self.heap_data.append(data)
 		self.size += 1
-		self.sift_up(len(self.heap_data) - 1)
+		self.sift_up(self.size - 1)
 
 	def extract(self):
-                if self.size == 0:
-                    return None
-		temp = self.heap_data[0]
-		self.heap_data[0] = self.heap_data[len(self.heap_data) - 1]
-		del(self.heap_data[-1])
-		self.size -= 1
-		self.sift_down(0)
+		if self.size == 0:
+			return None
+		last_elem = self.heap_data.pop()
+		if self.heap_data:
+			temp = self.heap_data[0]
+			heap[0] = last_elem
+			self.size -= 1
+			self.sift_down(0)
+		else:
+			temp = last_elem
 		return temp
 
 	def sift_up(self, index):
@@ -31,31 +34,28 @@ class MinHeap(object):
 
 	def sift_down(self, index):
 		r_index = self.right_child(index)
+		r_child = self.safe_get_value(r_index)
+
 		l_index = self.left_child(index)
-		# if the root is less than both of its children, it is in the correct position; break
-		if r_index < self.size:
-			if self.heap_data[index] < self.heap_data[r_index]: 
-				if l_index < self.size:
-					if self.heap_data[index] < self.heap_data[l_index]:
-						return
-				else:
-					return
-			else:
-				return
+		l_child = self.safe_get_value(l_index)
+
 		smaller = None
-		if r_index < self.size and l_index < self.size:
-			if self.heap_data[r_index] < self.heap_data[l_index]:
-				smaller = r_index
-			else:
-				smaller = l_index
-		elif r_index < self.size and l_index >= self.size:
+		if r_child and l_child:
+			smaller = r_index if r_child < l_child else l_index
+		elif r_child: 
 			smaller = r_index
-		elif r_index >= self.size and l_index < self.size:
+		elif l_child: 
 			smaller = l_index
 		else:
 			return
+
 		self.swap(index, smaller)
 		self.sift_down(smaller)
+
+	def safe_get_value(self, index):
+		if index < self.size:
+			return self.heap_data[index]
+		return None
 
 	def heapsort(self):
 		for i in self.size:
@@ -64,9 +64,7 @@ class MinHeap(object):
 			self.sift_down(self.size - i -1)	
 
 	def swap(self, ind1, ind2):
-		temp = self.heap_data[ind1]
-		self.heap_data[ind1] = self.heap_data[ind2]
-		self.heap_data[ind2] = temp
+		self.heap_data[ind1], self.heap_data[ind2] = self.heap_data[ind2], self.heap_data[ind1]
 
 	def parent(self, index):
 		return int(math.floor((index - 1) / 2))
