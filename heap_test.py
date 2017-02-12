@@ -29,6 +29,25 @@ def incomplete_tree_test():
 	assert elems == [1, 2]
 	assert_size(h, 0)
 
+def several_elements_test():
+	h = MinHeap()
+	h.insert(5)
+	h.insert(3)
+	h.insert(4)
+	h.insert(122)
+	h.insert(100)
+	h.insert(2)
+	h.insert(8)
+	h.insert(18)
+	assert_size(h, 8)
+
+	elems = []
+	for i in range(8):
+		elems.append(h.extract())
+	print elems
+	assert elems == [2, 3, 4, 5, 8, 18, 100, 122]
+	assert_size(h, 0)
+
 def assert_size(heap, size):
 	assert heap.size == size
 	assert len(heap.heap_data) == heap.size
@@ -42,6 +61,9 @@ def main():
 
 	print "Testing inserting and extracting from an incomplete tree"
 	incomplete_tree_test()
+
+	print "Testing inserting and extracting several items"
+	several_elements_test()
 
 if __name__ == "__main__":
 	print "Launching test suite"
