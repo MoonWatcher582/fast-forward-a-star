@@ -92,7 +92,7 @@ class PathFinderNormal:
         if neighbors:
             for n in neighbors:
                 n.g = start.g + 1
-                if self.grid[n.x][n.y]:
+                if self.grid[n.y][n.x]:
                     continue
                 n.distance = calculate_manhattan_distance(n, goal)
                 self.open.insert(n)
@@ -169,7 +169,7 @@ class PathFinderBackwards:
         if neighbors:
             for n in neighbors:
                 n.g = start.g + 1
-                if self.grid[n.x][n.y]:
+                if self.grid[n.y][n.x]:
                     continue
                 n.distance = calculate_manhattan_distance(n, goal)
                 self.open.insert(n)
@@ -246,7 +246,7 @@ class PathFinderTieBreak:
         if neighbors:
             for n in neighbors:
                 n.g = start.g + 1
-                if self.grid[n.x][n.y]:
+                if self.grid[n.y][n.x]:
                     continue
                 n.distance = calculate_manhattan_distance(n, goal)
                 self.open.insert(n)
