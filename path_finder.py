@@ -35,9 +35,7 @@ class HighCoord:
         return "{" + str(self.x) + ", " + str(self.y) + "}"
 
     def __lt__(self, other):
-        if self.distance == other.distance:
-            return other.g < self.g
-        return self.distance < other.distance
+        return (self.distance - self.g) < (other.distance - other.g)
 
     def __eq__(self, other):
         if self.x == other.x and self.y == other.y:
