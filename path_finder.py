@@ -1,7 +1,7 @@
 from heap import MinHeap
 import sys
 
-max_size = 3
+max_size = 101
 
 class Coord:
     def __init__(self, x, y):
@@ -64,6 +64,7 @@ class PathFinderNormal:
         with open(maze_file, 'r') as f:
             line_row = 0
             for line in f:
+                self.grid.append([])
                 line = line.rstrip()
                 if not line:
                     continue
@@ -140,6 +141,7 @@ class PathFinderBackwards:
         with open(maze_file, 'r') as f:
             line_row = 0
             for line in f:
+                self.grid.append([])
                 line = line.rstrip()
                 if not line:
                     continue
@@ -216,6 +218,7 @@ class PathFinderTieBreak:
         with open(maze_file, 'r') as f:
             line_row = 0
             for line in f:
+                self.grid.append([])
                 line = line.rstrip()
                 if not line:
                     continue
@@ -296,7 +299,16 @@ def line_to_high_coord(line):
 
 def main():
     sys.setrecursionlimit(10300)
-    pf = PathFinderNormal(sys.argv[1])
+    pf = None
+    if sys.argv[1] == "normal":
+        pf = PathFinderNormal(sys.argv[2])
+    elif sys.argv[1] == "backwards":
+        pf = PathFinderBackwards(sys.argv[2])
+    elif sys.argv[1] == "tiebreak":
+        pf = PathFinderTieBreak(sys.argv[2])
+    else:
+        print "Bad args. path_finder.py <normal/backwards/tiebreak> <filename>"
+        return
     path = pf.find_path()
     print path
 
