@@ -12,7 +12,7 @@ BLUE = (0, 0, 255)
 grid_size = 101
 block_size = 8
 multiplier = 1.13
-
+fps = 10
 
 def run_sim(start_state, end_state, path, maze):
 	start_x, start_y = start_state
@@ -59,7 +59,7 @@ def run_sim(start_state, end_state, path, maze):
 
 		path_index += 1
 		pygame.display.flip()
-		clock.tick(60)
+		clock.tick(fps)
 
 	pygame.quit()
 
@@ -83,7 +83,7 @@ def main():
 			line_col = 0
 			maze[line_row] = {}
 			for pos in line:
-				maze[line_row][line_col] = True if pos == '1' else False
+				maze[line_row][line_col] = True if pos == '0' else False
 				line_col += 1
 			line_row += 1
 
