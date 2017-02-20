@@ -14,10 +14,7 @@ class Coord:
         return "{" + str(self.x) + ", " + str(self.y) + "}"
 
     def __lt__(self, other):
-        i = self.distance < other.distance
-        if i != 0:
-            return i
-        return self.g < other.g
+        return (self.distance + self.g) < (other.distance + other.g)
 
     def __eq__(self, other):
         if self.x == other.x and self.y == other.y:
@@ -38,10 +35,9 @@ class HighCoord:
         return "{" + str(self.x) + ", " + str(self.y) + "}"
 
     def __lt__(self, other):
-        i = self.distance < other.distance
-        if i != 0:
-            return i
-        return other.g < self.g
+        if self.distance == other.distance:
+            return other.g < self.g
+        return self.distance < other.distance
 
     def __eq__(self, other):
         if self.x == other.x and self.y == other.y:
