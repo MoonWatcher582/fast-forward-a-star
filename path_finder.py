@@ -1,7 +1,7 @@
 from heap import MinHeap
 import sys
 
-max_size = 5
+max_size = 101
 
 class Coord:
     def __init__(self, x, y):
@@ -245,6 +245,9 @@ class PathFinderTieBreak:
             yind +=1
 
     def find_path(self):
+        self.open_dict.clear()
+        self.close.clear()
+        self.open = MinHeap()
         return self.find_path_internal(self.start_state, self.goal_state, [],
                 [])
 
@@ -287,7 +290,7 @@ class PathFinderTieBreak:
         # Find all neighbors.
         if start.x - 1 >= 0:
             n = HighCoord(start.x - 1, start.y)
-            if not self.close.has_key(n):
+            if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
 
         if start.y - 1 >= 0:
