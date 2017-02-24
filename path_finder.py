@@ -338,11 +338,13 @@ def main():
         print path
         print "---------------"
         print fpath
+        print len(path)
         pf.find_new_start()
         (path, fpath) = pf.find_path()
         print path
         print "---------------"
         print fpath
+        print len(path)
         return
     else:
         print "Bad args. path_finder.py <normal/backwards/tiebreak> <filename>"
