@@ -29,6 +29,7 @@ class HighCoord:
         self.x=x
         self.y=y
         self.g=-1
+        self.distance = -1
         self.__repr__ = self.__str__
 
     def __str__(self):
@@ -207,6 +208,7 @@ class PathFinderTieBreak:
         self.grid = []
         self.start_state = None
         self.goal_state = None
+        self.known_distances = dict()
         for i in range(max_size):
             self.grid.append([])
         with open(maze_file, 'r') as f:
@@ -227,14 +229,39 @@ class PathFinderTieBreak:
                     self.grid[line_row].append(True if pos == '1' else False)
                 line_row += 1
 
+    def find_new_start(self):
+        yind = 0
+        for y in self.grid:
+            xind = 0
+            for x in y:
+                if not self.grid[yind][xind] and (self.start_state.x != xind or
+                        self.start_state.y != yind):
+                    self.start_state = line_to_high_coord(str(xind) + "," +
+                            str(yind))
+                    self.start_state.g = 0
+                    print "New start is " + str(self.start_state)
+                    return
+                xind += 1
+            yind +=1
+
     def find_path(self):
-        return self.find_path_internal(self.start_state, self.goal_state, [])
+        self.open_dict.clear()
+        self.close.clear()
+        self.open = MinHeap()
+        return self.find_path_internal(self.start_state, self.goal_state, [],
+                [])
 
 
-    def find_path_internal(self, start, goal, path):
+    def find_path_internal(self, start, goal, path, final_path):
         path.append(start)
         if start == goal:
-            return path
+            final_path.append(start)
+            # Fill in h values with what we learned.
+            i = len(final_path)
+            for c in final_path:
+                self.known_distances[c] = i
+                i -= 1
+            return (path, final_path)
         self.close[start] = True
         neighbors = self.compute_valid_neighbors(start)
         if neighbors:
@@ -242,13 +269,20 @@ class PathFinderTieBreak:
                 n.g = start.g + 1
                 if self.grid[n.y][n.x]:
                     continue
-                n.distance = calculate_manhattan_distance(n, goal)
+                if n in self.known_distances:
+                    n.distance = self.known_distances[n]
+                else:
+                    n.distance = calculate_manhattan_distance(n, goal)
                 self.open.insert(n)
                 self.open_dict[n] = True
         nextC = self.open.extract()
         if not nextC:
-            return []
-        return self.find_path_internal(nextC, goal, path)
+            return ([], [])
+        if calculate_manhattan_distance(start, nextC) == 1:
+            final_path.append(start)
+        path, new_final_path = self.find_path_internal(nextC, goal, path,
+                final_path)
+        return (path, final_path)
 
 
     def compute_valid_neighbors(self, start):
@@ -256,7 +290,7 @@ class PathFinderTieBreak:
         # Find all neighbors.
         if start.x - 1 >= 0:
             n = HighCoord(start.x - 1, start.y)
-            if not self.close.has_key(n):
+            if not self.close.has_key(n) and not self.open_dict.has_key(n):
                 neighbors.append(n)
 
         if start.y - 1 >= 0:
@@ -300,9 +334,20 @@ def main():
         pf = PathFinderBackwards(sys.argv[2])
     elif sys.argv[1] == "tiebreak":
         pf = PathFinderTieBreak(sys.argv[2])
+        (path, fpath) = pf.find_path()
+        print path
+        print "---------------"
+        print fpath
+        pf.find_new_start()
+        (path, fpath) = pf.find_path()
+        print path
+        print "---------------"
+        print fpath
+        return
     else:
         print "Bad args. path_finder.py <normal/backwards/tiebreak> <filename>"
         return
+
     path = pf.find_path()
     print path
 
