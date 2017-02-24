@@ -12,7 +12,7 @@ BLUE = (0, 0, 255)
 grid_size = 101
 block_size = 8
 multiplier = 1.13
-fps = 10
+fps = 60
 
 def run_sim(start_state, end_state, path, maze):
 	start_x, start_y = start_state
